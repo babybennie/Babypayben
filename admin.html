@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>bennie choco Admin</title>
+    <title>Bennie Choco Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,16 +28,35 @@
         }
 
         .glass {
-            background: rgba(255,255,255,.85);
+            background: rgba(255,255,255,.88);
 
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
 
-            border: 1px solid rgba(255,255,255,.9);
+            border: 1px solid rgba(255,255,255,.95);
 
             box-shadow:
                 0 20px 50px -10px
                 rgba(244,114,182,.15);
+        }
+
+        input,
+        select {
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #f9a8d4;
+            box-shadow: 0 0 0 3px rgba(244,114,182,.12);
+        }
+
+        button {
+            transition: .15s ease;
+        }
+
+        button:active {
+            transform: scale(.98);
         }
     </style>
 </head>
@@ -47,7 +66,6 @@
 <div class="max-w-6xl mx-auto px-4 py-6">
 
     <!-- HEADER -->
-
     <div
         class="flex flex-col md:flex-row
                md:items-center md:justify-between
@@ -56,19 +74,24 @@
 
         <div>
             <h1 class="text-2xl font-bold text-pink-500">
-                Pinkjulieland Admin
+                Bennie Choco Admin
             </h1>
 
             <p class="text-sm text-gray-500">
-                จัดการรายการชำระเงิน
+                ระบบจัดการรายการชำระเงิน
             </p>
         </div>
 
         <button
+            id="logoutButton"
             onclick="logout()"
-            class="bg-gray-800 text-white
-                   px-5 py-2.5 rounded-xl
-                   text-sm font-medium"
+            class="hidden bg-gray-800
+                   hover:bg-gray-900
+                   text-white
+                   px-5 py-2.5
+                   rounded-xl
+                   text-sm
+                   font-medium"
         >
             ออกจากระบบ
         </button>
@@ -77,45 +100,76 @@
 
 
     <!-- LOGIN -->
-
     <div
         id="loginPanel"
         class="max-w-md mx-auto glass
                rounded-3xl p-6"
     >
 
-        <h2 class="text-lg font-bold mb-2">
-            เข้าสู่ระบบแอดมิน
-        </h2>
+        <div class="text-center mb-6">
 
-        <p class="text-sm text-gray-500 mb-5">
-            กรุณาใส่รหัสแอดมิน
-        </p>
+            <div
+                class="w-16 h-16
+                       mx-auto mb-4
+                       rounded-2xl
+                       bg-pink-100
+                       flex items-center
+                       justify-center
+                       text-2xl"
+            >
+                🍫
+            </div>
+
+            <h2 class="text-xl font-bold">
+                Bennie Choco
+            </h2>
+
+            <p class="text-sm text-gray-500 mt-1">
+                เข้าสู่ระบบแอดมิน
+            </p>
+
+        </div>
+
+
+        <label class="text-sm font-medium">
+            รหัสแอดมิน
+        </label>
 
         <input
             id="apiKeyInput"
             type="password"
-            placeholder="รหัสแอดมิน"
+            placeholder="กรุณาใส่รหัสแอดมิน"
             autocomplete="current-password"
-            class="w-full border border-pink-100
-                   rounded-xl px-4 py-3
-                   outline-none focus:ring-2
-                   focus:ring-pink-300"
+            class="w-full
+                   mt-2
+                   border border-pink-100
+                   rounded-xl
+                   px-4 py-3
+                   outline-none"
+            onkeydown="if(event.key === 'Enter') login()"
         >
+
 
         <button
             onclick="login()"
             class="w-full mt-4
-                   bg-pink-500 hover:bg-pink-600
-                   text-white font-semibold
-                   py-3 rounded-xl"
+                   bg-pink-500
+                   hover:bg-pink-600
+                   text-white
+                   font-semibold
+                   py-3
+                   rounded-xl"
         >
             เข้าสู่ระบบ
         </button>
 
+
         <div
             id="loginError"
-            class="text-red-500 text-sm mt-3 hidden"
+            class="text-red-500
+                   text-sm
+                   mt-3
+                   hidden"
         >
         </div>
 
@@ -123,38 +177,30 @@
 
 
     <!-- ADMIN APP -->
-
     <div
         id="adminPanel"
         class="hidden"
     >
 
         <!-- CREATE PAYMENT -->
-
         <div class="glass rounded-3xl p-6 mb-6">
 
-            <div
-                class="flex items-center
-                       justify-between mb-5"
-            >
+            <div class="mb-5">
 
-                <div>
+                <h2 class="text-lg font-bold">
+                    สร้างรายการชำระเงิน
+                </h2>
 
-                    <h2 class="text-lg font-bold">
-                        สร้างรายการชำระเงิน
-                    </h2>
-
-                    <p class="text-xs text-gray-500">
-                        สร้างลิงก์ส่งให้ลูกค้า
-                    </p>
-
-                </div>
+                <p class="text-xs text-gray-500">
+                    สร้างลิงก์สำหรับส่งให้ลูกค้า
+                </p>
 
             </div>
 
 
             <div class="grid md:grid-cols-2 gap-4">
 
+                <!-- AMOUNT -->
                 <div>
 
                     <label class="text-sm font-medium">
@@ -167,14 +213,16 @@
                         min="0.01"
                         step="0.01"
                         placeholder="599"
-                        class="mt-1 w-full border
-                               border-pink-100
-                               rounded-xl px-4 py-3"
+                        class="mt-1 w-full
+                               border border-pink-100
+                               rounded-xl
+                               px-4 py-3"
                     >
 
                 </div>
 
 
+                <!-- CUSTOMER -->
                 <div>
 
                     <label class="text-sm font-medium">
@@ -185,14 +233,16 @@
                         id="createCustomer"
                         type="text"
                         placeholder="น้องพลอย"
-                        class="mt-1 w-full border
-                               border-pink-100
-                               rounded-xl px-4 py-3"
+                        class="mt-1 w-full
+                               border border-pink-100
+                               rounded-xl
+                               px-4 py-3"
                     >
 
                 </div>
 
 
+                <!-- ORDER -->
                 <div>
 
                     <label class="text-sm font-medium">
@@ -203,14 +253,16 @@
                         id="createOrder"
                         type="text"
                         placeholder="ค่ามัดจำสินค้า"
-                        class="mt-1 w-full border
-                               border-pink-100
-                               rounded-xl px-4 py-3"
+                        class="mt-1 w-full
+                               border border-pink-100
+                               rounded-xl
+                               px-4 py-3"
                     >
 
                 </div>
 
 
+                <!-- EXPIRE -->
                 <div>
 
                     <label class="text-sm font-medium">
@@ -223,9 +275,10 @@
                         value="60"
                         min="5"
                         max="10080"
-                        class="mt-1 w-full border
-                               border-pink-100
-                               rounded-xl px-4 py-3"
+                        class="mt-1 w-full
+                               border border-pink-100
+                               rounded-xl
+                               px-4 py-3"
                     >
 
                 </div>
@@ -235,21 +288,26 @@
 
             <button
                 onclick="createPayment()"
-                class="mt-5 bg-pink-500
+                class="mt-5
+                       bg-pink-500
                        hover:bg-pink-600
-                       text-white font-semibold
-                       px-6 py-3 rounded-xl"
+                       text-white
+                       font-semibold
+                       px-6 py-3
+                       rounded-xl"
             >
                 + สร้างรายการ
             </button>
 
 
+            <!-- CREATE RESULT -->
             <div
                 id="createResult"
                 class="hidden mt-5
                        bg-pink-50
                        border border-pink-200
-                       rounded-2xl p-4"
+                       rounded-2xl
+                       p-4"
             >
             </div>
 
@@ -257,13 +315,13 @@
 
 
         <!-- FILTER -->
-
         <div class="glass rounded-3xl p-5 mb-6">
 
             <div
                 class="flex flex-col md:flex-row
                        md:items-center
-                       md:justify-between gap-3"
+                       md:justify-between
+                       gap-3"
             >
 
                 <div>
@@ -271,6 +329,10 @@
                     <h2 class="font-bold">
                         รายการชำระเงิน
                     </h2>
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        ดูและจัดการรายการของ Bennie Choco
+                    </p>
 
                 </div>
 
@@ -281,7 +343,8 @@
                         id="statusFilter"
                         onchange="loadPayments()"
                         class="border border-pink-100
-                               rounded-xl px-4 py-2"
+                               rounded-xl
+                               px-4 py-2"
                     >
 
                         <option value="">
@@ -310,6 +373,7 @@
                     <button
                         onclick="loadPayments()"
                         class="bg-gray-800
+                               hover:bg-gray-900
                                text-white
                                px-4 py-2
                                rounded-xl"
@@ -325,7 +389,6 @@
 
 
         <!-- TABLE -->
-
         <div
             class="glass rounded-3xl
                    overflow-hidden"
@@ -369,6 +432,20 @@
 
 
                     <tbody id="paymentTable">
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="p-8
+                                       text-center
+                                       text-gray-400"
+                            >
+                                กรุณาเข้าสู่ระบบ
+                            </td>
+
+                        </tr>
+
                     </tbody>
 
                 </table>
@@ -383,12 +460,15 @@
 
 
 <!-- EDIT MODAL -->
-
 <div
     id="editModal"
-    class="fixed inset-0 bg-black/40
-           hidden items-center justify-center
-           p-4 z-50"
+    class="fixed inset-0
+           bg-black/40
+           hidden
+           items-center
+           justify-center
+           p-4
+           z-50"
 >
 
     <div
@@ -401,7 +481,8 @@
 
         <div
             class="flex justify-between
-                   items-center mb-5"
+                   items-center
+                   mb-5"
         >
 
             <h2 class="font-bold text-lg">
@@ -411,7 +492,8 @@
             <button
                 onclick="closeEdit()"
                 class="text-gray-400
-                       text-xl"
+                       hover:text-gray-700
+                       text-2xl"
             >
                 ×
             </button>
@@ -432,9 +514,12 @@
         <input
             id="editAmount"
             type="number"
+            min="0.01"
             step="0.01"
-            class="w-full border
-                   rounded-xl px-4 py-3
+            class="w-full
+                   border
+                   rounded-xl
+                   px-4 py-3
                    mt-1 mb-4"
         >
 
@@ -446,8 +531,10 @@
         <input
             id="editCustomer"
             type="text"
-            class="w-full border
-                   rounded-xl px-4 py-3
+            class="w-full
+                   border
+                   rounded-xl
+                   px-4 py-3
                    mt-1 mb-4"
         >
 
@@ -459,8 +546,10 @@
         <input
             id="editOrder"
             type="text"
-            class="w-full border
-                   rounded-xl px-4 py-3
+            class="w-full
+                   border
+                   rounded-xl
+                   px-4 py-3
                    mt-1 mb-5"
         >
 
@@ -469,17 +558,23 @@
 
             <button
                 onclick="saveEdit()"
-                class="flex-1 bg-pink-500
+                class="flex-1
+                       bg-pink-500
+                       hover:bg-pink-600
                        text-white
-                       py-3 rounded-xl
+                       py-3
+                       rounded-xl
                        font-semibold"
             >
                 บันทึก
             </button>
 
+
             <button
                 onclick="closeEdit()"
-                class="px-5 bg-gray-100
+                class="px-5
+                       bg-gray-100
+                       hover:bg-gray-200
                        rounded-xl"
             >
                 ยกเลิก
@@ -495,31 +590,48 @@
 <script>
 
 /* =====================================================
-   CONFIG
+   BENNIE CHOCO CONFIG
    ===================================================== */
 
 /*
-   รหัสแอดมินที่คุณกำหนด
+   ชื่อร้าน
 */
+const STORE_NAME = 'Bennie Choco';
 
-const ADMIN_API_KEY = 'Benzzappy1';
+
+/*
+   รหัสแอดมิน
+
+   ใช้ตัวพิมพ์เล็กตามที่กำหนด:
+   benzzappy1
+*/
+const ADMIN_API_KEY = 'benzzappy1';
 
 
 /*
    API ของระบบ
-*/
 
+   ใช้ /api เพื่อให้หน้า Admin
+   คุยกับ Backend เดิม
+*/
 const API = '/api';
 
 
 /*
-   เก็บ API Key ที่ล็อกอินแล้ว
-*/
+   ชื่อที่ใช้เก็บ API Key ในเครื่อง
 
+   เปลี่ยนจากชื่อเก่า
+   pinkjulie_admin_key
+   เป็นของ Bennie Choco
+*/
+const STORAGE_KEY = 'bennie_choco_admin_key';
+
+
+/*
+   API Key ปัจจุบัน
+*/
 let API_KEY =
-    localStorage.getItem(
-        'pinkjulie_admin_key'
-    );
+    localStorage.getItem(STORAGE_KEY);
 
 
 /* =====================================================
@@ -528,11 +640,20 @@ let API_KEY =
 
 function login() {
 
+    const input =
+        document.getElementById(
+            'apiKeyInput'
+        );
+
+
     const key =
-        document
-            .getElementById('apiKeyInput')
-            .value
-            .trim();
+        input.value.trim();
+
+
+    /*
+       ล้าง error เก่า
+    */
+    hideLoginError();
 
 
     if (!key) {
@@ -546,32 +667,35 @@ function login() {
 
 
     /*
-       ตรวจรหัสที่หน้า Admin
+       ตรวจรหัสหน้าเว็บก่อน
     */
-
     if (key !== ADMIN_API_KEY) {
 
         showLoginError(
             'รหัสแอดมินไม่ถูกต้อง'
         );
 
+        input.select();
+
         return;
     }
 
 
     /*
-       รหัสถูกต้อง
+       เก็บรหัสไว้ใช้
     */
-
     API_KEY = key;
 
 
     localStorage.setItem(
-        'pinkjulie_admin_key',
+        STORAGE_KEY,
         key
     );
 
 
+    /*
+       ตรวจสอบกับ Backend จริง
+    */
     verifyLogin();
 }
 
@@ -582,29 +706,69 @@ function login() {
 
 async function verifyLogin() {
 
+    if (!API_KEY) {
+
+        return;
+
+    }
+
+
     try {
 
         const response =
             await fetch(
                 `${API}/admin/payments?limit=1`,
                 {
+                    method: 'GET',
+
                     headers: {
-                        'X-API-Key':
-                            API_KEY
+                        'X-API-Key': API_KEY
                     }
                 }
             );
 
 
+        /*
+           ถ้า Backend ไม่ยอมรับรหัส
+        */
         if (!response.ok) {
 
-            throw new Error(
-                'Invalid API Key'
+            let errorMessage =
+                'รหัสแอดมินไม่สามารถใช้งานกับระบบได้';
+
+
+            try {
+
+                const data =
+                    await response.json();
+
+                if (data.error) {
+
+                    errorMessage =
+                        data.error;
+
+                }
+
+            } catch (e) {
+                // ไม่ต้องทำอะไร
+            }
+
+
+            clearLogin();
+
+
+            showLoginError(
+                errorMessage
             );
 
+
+            return;
         }
 
 
+        /*
+           Login สำเร็จ
+        */
         document
             .getElementById('loginPanel')
             .classList.add('hidden');
@@ -615,21 +779,33 @@ async function verifyLogin() {
             .classList.remove('hidden');
 
 
+        document
+            .getElementById('logoutButton')
+            .classList.remove('hidden');
+
+
+        hideLoginError();
+
+
+        /*
+           โหลดรายการ
+        */
         loadPayments();
 
 
     } catch (error) {
 
-        localStorage.removeItem(
-            'pinkjulie_admin_key'
+        console.error(
+            'verifyLogin error:',
+            error
         );
 
 
-        API_KEY = null;
+        clearLogin();
 
 
         showLoginError(
-            'ไม่สามารถเข้าสู่ระบบได้ กรุณาตรวจสอบรหัสแอดมิน'
+            'เชื่อมต่อระบบไม่ได้ กรุณาตรวจสอบว่า API/Backend ทำงานอยู่'
         );
 
     }
@@ -637,10 +813,27 @@ async function verifyLogin() {
 
 
 /* =====================================================
+   CLEAR LOGIN
+   ===================================================== */
+
+function clearLogin() {
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    API_KEY = null;
+
+}
+
+
+/* =====================================================
    LOGIN ERROR
    ===================================================== */
 
-function showLoginError(message) {
+function showLoginError(
+    message
+) {
 
     const el =
         document.getElementById(
@@ -648,10 +841,29 @@ function showLoginError(message) {
         );
 
 
-    el.textContent = message;
+    el.textContent =
+        message;
 
 
     el.classList.remove(
+        'hidden'
+    );
+}
+
+
+function hideLoginError() {
+
+    const el =
+        document.getElementById(
+            'loginError'
+        );
+
+
+    el.textContent =
+        '';
+
+
+    el.classList.add(
         'hidden'
     );
 }
@@ -663,15 +875,11 @@ function showLoginError(message) {
 
 function logout() {
 
-    localStorage.removeItem(
-        'pinkjulie_admin_key'
-    );
-
-
-    API_KEY = null;
+    clearLogin();
 
 
     location.reload();
+
 }
 
 
@@ -684,43 +892,71 @@ async function apiFetch(
     options = {}
 ) {
 
-    const response =
-        await fetch(
-            url,
-            {
-                ...options,
-
-                headers: {
-
-                    ...(options.headers || {}),
-
-                    'X-API-Key':
-                        API_KEY,
-
-                    'Content-Type':
-                        'application/json'
-
-                }
-            }
-        );
-
-
-    if (
-        response.status === 401 ||
-        response.status === 403
-    ) {
-
-        logout();
+    if (!API_KEY) {
 
         throw new Error(
-            'Unauthorized'
+            'กรุณาเข้าสู่ระบบก่อน'
         );
 
     }
 
 
+    const headers = {
+
+        ...(options.headers || {}),
+
+        'X-API-Key':
+            API_KEY
+
+    };
+
+
+    /*
+       ใส่ Content-Type เฉพาะเวลามี body
+    */
+    if (options.body) {
+
+        headers['Content-Type'] =
+            'application/json';
+
+    }
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                ...options,
+                headers
+            }
+        );
+
+
+    /*
+       ไม่มีสิทธิ์
+    */
+    if (
+        response.status === 401 ||
+        response.status === 403
+    ) {
+
+        clearLogin();
+
+        location.reload();
+
+        throw new Error(
+            'รหัสแอดมินไม่ถูกต้องหรือหมดสิทธิ์'
+        );
+
+    }
+
+
+    /*
+       อ่านข้อมูลตอบกลับ
+    */
     const data =
-        await response.json()
+        await response
+            .json()
             .catch(
                 () => ({})
             );
@@ -730,7 +966,8 @@ async function apiFetch(
 
         throw new Error(
             data.error ||
-            'เกิดข้อผิดพลาด'
+            data.message ||
+            'เกิดข้อผิดพลาดจากระบบ'
         );
 
     }
@@ -759,7 +996,8 @@ async function createPayment() {
             .getElementById(
                 'createCustomer'
             )
-            .value;
+            .value
+            .trim();
 
 
     const orderDetail =
@@ -767,7 +1005,8 @@ async function createPayment() {
             .getElementById(
                 'createOrder'
             )
-            .value;
+            .value
+            .trim();
 
 
     const expiresInMinutes =
@@ -778,10 +1017,44 @@ async function createPayment() {
             .value;
 
 
-    if (!amount) {
+    const numericAmount =
+        Number(amount);
+
+
+    const numericExpire =
+        Number(
+            expiresInMinutes
+        );
+
+
+    /*
+       ตรวจยอด
+    */
+    if (
+        !amount ||
+        !Number.isFinite(numericAmount) ||
+        numericAmount <= 0
+    ) {
 
         alert(
-            'กรุณาใส่ยอดเงิน'
+            'กรุณาใส่ยอดเงินให้ถูกต้อง'
+        );
+
+        return;
+    }
+
+
+    /*
+       ตรวจอายุลิงก์
+    */
+    if (
+        !Number.isFinite(numericExpire) ||
+        numericExpire < 5 ||
+        numericExpire > 10080
+    ) {
+
+        alert(
+            'อายุลิงก์ต้องอยู่ระหว่าง 5 - 10080 นาที'
         );
 
         return;
@@ -794,25 +1067,20 @@ async function createPayment() {
             await apiFetch(
                 `${API}/admin/payments`,
                 {
-                    method:
-                        'POST',
+                    method: 'POST',
 
                     body:
                         JSON.stringify({
 
                             amount:
-                                Number(
-                                    amount
-                                ),
+                                numericAmount,
 
                             customerName,
 
                             orderDetail,
 
                             expiresInMinutes:
-                                Number(
-                                    expiresInMinutes
-                                )
+                                numericExpire
 
                         })
                 }
@@ -823,15 +1091,29 @@ async function createPayment() {
             result.payment;
 
 
-        const url =
-            `${location.origin}/pay/${payment.id}`;
+        if (
+            !payment ||
+            !payment.id
+        ) {
+
+            throw new Error(
+                'ระบบสร้างรายการแล้ว แต่ไม่พบ Payment ID'
+            );
+
+        }
+
+
+        /*
+           ลิงก์ลูกค้า
+        */
+        const customerUrl =
+            `${location.origin}/pay/${encodeURIComponent(payment.id)}`;
 
 
         const resultBox =
-            document
-                .getElementById(
-                    'createResult'
-                );
+            document.getElementById(
+                'createResult'
+            );
 
 
         resultBox.innerHTML = `
@@ -841,8 +1123,9 @@ async function createPayment() {
                        text-pink-500
                        mb-2"
             >
-                สร้างรายการสำเร็จ
+                ✓ สร้างรายการสำเร็จ
             </div>
+
 
             <div class="text-sm mb-2">
 
@@ -854,26 +1137,55 @@ async function createPayment() {
 
             </div>
 
+
+            <div
+                class="text-xs
+                       text-gray-500
+                       mb-1"
+            >
+                ลิงก์สำหรับลูกค้า
+            </div>
+
+
             <div class="flex gap-2">
 
                 <input
-                    value="${escapeHtml(url)}"
+                    value="${escapeHtml(customerUrl)}"
                     readonly
-                    class="flex-1 border
-                           rounded-xl px-3 py-2
+                    class="flex-1
+                           border
+                           rounded-xl
+                           px-3 py-2
                            text-xs"
                 >
 
+
                 <button
-                    onclick="copyValue('${escapeJs(url)}')"
+                    onclick="copyValue('${escapeJs(customerUrl)}')"
                     class="bg-pink-500
+                           hover:bg-pink-600
                            text-white
-                           px-4 rounded-xl"
+                           px-4
+                           rounded-xl"
                 >
                     คัดลอก
                 </button>
 
             </div>
+
+
+            <a
+                href="${escapeHtml(customerUrl)}"
+                target="_blank"
+                rel="noopener"
+                class="inline-block
+                       mt-3
+                       text-sm
+                       text-pink-500
+                       underline"
+            >
+                เปิดหน้าลูกค้า
+            </a>
 
         `;
 
@@ -883,6 +1195,9 @@ async function createPayment() {
         );
 
 
+        /*
+           ล้างฟอร์ม
+        */
         document
             .getElementById(
                 'createAmount'
@@ -904,10 +1219,19 @@ async function createPayment() {
             .value = '';
 
 
+        /*
+           โหลดรายการใหม่
+        */
         loadPayments();
 
 
     } catch (error) {
+
+        console.error(
+            'createPayment error:',
+            error
+        );
+
 
         alert(
             error.message
@@ -923,12 +1247,16 @@ async function createPayment() {
 
 async function loadPayments() {
 
+    const filter =
+        document.getElementById(
+            'statusFilter'
+        );
+
+
     const status =
-        document
-            .getElementById(
-                'statusFilter'
-            )
-            .value;
+        filter
+            ? filter.value
+            : '';
 
 
     let url =
@@ -957,6 +1285,12 @@ async function loadPayments() {
 
 
     } catch (error) {
+
+        console.error(
+            'loadPayments error:',
+            error
+        );
+
 
         alert(
             error.message
@@ -992,7 +1326,7 @@ function renderPayments(
                            text-center
                            text-gray-400"
                 >
-                    ไม่พบรายการ
+                    ไม่พบรายการชำระเงิน
                 </td>
 
             </tr>
@@ -1025,7 +1359,7 @@ function paymentRow(
 
 
     let statusText =
-        status;
+        status || '-';
 
 
     let statusClass =
@@ -1084,27 +1418,37 @@ function paymentRow(
     }
 
 
+    const paymentId =
+        payment.id || '';
+
+
+    const customerUrl =
+        `/pay/${encodeURIComponent(paymentId)}`;
+
+
     return `
 
         <tr
             class="border-t
-                   border-pink-50"
+                   border-pink-50
+                   hover:bg-pink-50/40"
         >
 
+            <!-- ID -->
             <td class="p-4">
 
                 <div
                     class="font-bold
                            text-pink-500"
                 >
-                    ${escapeHtml(
-                        payment.id
-                    )}
+                    ${escapeHtml(paymentId)}
                 </div>
 
+
                 <a
-                    href="/pay/${encodeURIComponent(payment.id)}"
+                    href="${customerUrl}"
                     target="_blank"
+                    rel="noopener"
                     class="text-xs
                            text-gray-400
                            underline"
@@ -1115,6 +1459,7 @@ function paymentRow(
             </td>
 
 
+            <!-- CUSTOMER -->
             <td class="p-4">
 
                 <div class="font-medium">
@@ -1125,6 +1470,7 @@ function paymentRow(
                     )}
 
                 </div>
+
 
                 <div
                     class="text-xs
@@ -1141,20 +1487,23 @@ function paymentRow(
             </td>
 
 
+            <!-- AMOUNT -->
             <td class="p-4 font-bold">
 
                 ฿${Number(
-                    payment.amount
+                    payment.amount || 0
                 ).toLocaleString(
                     'th-TH',
                     {
-                        minimumFractionDigits: 2
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
                     }
                 )}
 
             </td>
 
 
+            <!-- STATUS -->
             <td class="p-4">
 
                 <span
@@ -1171,6 +1520,7 @@ function paymentRow(
             </td>
 
 
+            <!-- EXPIRE -->
             <td class="p-4 text-xs">
 
                 ${formatDate(
@@ -1180,6 +1530,7 @@ function paymentRow(
             </td>
 
 
+            <!-- ACTIONS -->
             <td class="p-4">
 
                 <div
@@ -1193,28 +1544,30 @@ function paymentRow(
                         status === 'pending'
                         ? `
 
-                        <button
-                            onclick="markPaid('${escapeJs(payment.id)}')"
-                            class="bg-green-500
-                                   text-white
-                                   px-3 py-1.5
-                                   rounded-lg
-                                   text-xs"
-                        >
-                            จ่ายแล้ว
-                        </button>
+                            <button
+                                onclick="markPaid('${escapeJs(paymentId)}')"
+                                class="bg-green-500
+                                       hover:bg-green-600
+                                       text-white
+                                       px-3 py-1.5
+                                       rounded-lg
+                                       text-xs"
+                            >
+                                จ่ายแล้ว
+                            </button>
 
 
-                        <button
-                            onclick="cancelPayment('${escapeJs(payment.id)}')"
-                            class="bg-red-500
-                                   text-white
-                                   px-3 py-1.5
-                                   rounded-lg
-                                   text-xs"
-                        >
-                            ยกเลิก
-                        </button>
+                            <button
+                                onclick="cancelPayment('${escapeJs(paymentId)}')"
+                                class="bg-red-500
+                                       hover:bg-red-600
+                                       text-white
+                                       px-3 py-1.5
+                                       rounded-lg
+                                       text-xs"
+                            >
+                                ยกเลิก
+                            </button>
 
                         `
                         : ''
@@ -1222,8 +1575,9 @@ function paymentRow(
 
 
                     <button
-                        onclick="openEdit('${escapeJs(payment.id)}')"
+                        onclick="openEdit('${escapeJs(paymentId)}')"
                         class="bg-pink-500
+                               hover:bg-pink-600
                                text-white
                                px-3 py-1.5
                                rounded-lg
@@ -1257,7 +1611,6 @@ async function markPaid(
     ) {
 
         return;
-
     }
 
 
@@ -1266,13 +1619,12 @@ async function markPaid(
         await apiFetch(
             `${API}/admin/payments/${encodeURIComponent(id)}/paid`,
             {
-                method:
-                    'PATCH'
+                method: 'PATCH'
             }
         );
 
 
-        loadPayments();
+        await loadPayments();
 
 
     } catch (error) {
@@ -1300,7 +1652,6 @@ async function cancelPayment(
     ) {
 
         return;
-
     }
 
 
@@ -1309,13 +1660,12 @@ async function cancelPayment(
         await apiFetch(
             `${API}/admin/payments/${encodeURIComponent(id)}/cancel`,
             {
-                method:
-                    'PATCH'
+                method: 'PATCH'
             }
         );
 
 
-        loadPayments();
+        await loadPayments();
 
 
     } catch (error) {
@@ -1348,12 +1698,21 @@ async function openEdit(
             result.payment;
 
 
+        if (!payment) {
+
+            throw new Error(
+                'ไม่พบรายการนี้'
+            );
+
+        }
+
+
         document
             .getElementById(
                 'editId'
             )
             .value =
-            payment.id;
+            payment.id || '';
 
 
         document
@@ -1361,7 +1720,7 @@ async function openEdit(
                 'editAmount'
             )
             .value =
-            payment.amount;
+            payment.amount || '';
 
 
         document
@@ -1369,8 +1728,7 @@ async function openEdit(
                 'editCustomer'
             )
             .value =
-            payment.customer_name ||
-            '';
+            payment.customer_name || '';
 
 
         document
@@ -1378,8 +1736,7 @@ async function openEdit(
                 'editOrder'
             )
             .value =
-            payment.order_detail ||
-            '';
+            payment.order_detail || '';
 
 
         const modal =
@@ -1428,6 +1785,7 @@ function closeEdit() {
     modal.classList.remove(
         'flex'
     );
+
 }
 
 
@@ -1460,7 +1818,8 @@ async function saveEdit() {
             .getElementById(
                 'editCustomer'
             )
-            .value;
+            .value
+            .trim();
 
 
     const orderDetail =
@@ -1468,16 +1827,29 @@ async function saveEdit() {
             .getElementById(
                 'editOrder'
             )
-            .value;
+            .value
+            .trim();
 
 
     if (
-        !amount ||
+        !id
+    ) {
+
+        alert(
+            'ไม่พบ Payment ID'
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(amount) ||
         amount <= 0
     ) {
 
         alert(
-            'กรุณาระบุยอดเงิน'
+            'กรุณาระบุยอดเงินให้ถูกต้อง'
         );
 
         return;
@@ -1489,8 +1861,7 @@ async function saveEdit() {
         await apiFetch(
             `${API}/admin/payments/${encodeURIComponent(id)}`,
             {
-                method:
-                    'PATCH',
+                method: 'PATCH',
 
                 body:
                     JSON.stringify({
@@ -1509,7 +1880,7 @@ async function saveEdit() {
         closeEdit();
 
 
-        loadPayments();
+        await loadPayments();
 
 
     } catch (error) {
@@ -1532,17 +1903,68 @@ async function copyValue(
 
     try {
 
-        await navigator.clipboard.writeText(
-            value
-        );
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            await navigator.clipboard.writeText(
+                value
+            );
+
+        } else {
+
+            const textarea =
+                document.createElement(
+                    'textarea'
+                );
+
+
+            textarea.value =
+                value;
+
+
+            textarea.style.position =
+                'fixed';
+
+
+            textarea.style.opacity =
+                '0';
+
+
+            document.body.appendChild(
+                textarea
+            );
+
+
+            textarea.focus();
+
+
+            textarea.select();
+
+
+            document.execCommand(
+                'copy'
+            );
+
+
+            textarea.remove();
+
+        }
 
 
         alert(
-            'คัดลอกแล้ว'
+            'คัดลอกลิงก์แล้ว'
         );
 
 
-    } catch {
+    } catch (error) {
+
+        console.error(
+            'copy error:',
+            error
+        );
+
 
         alert(
             'ไม่สามารถคัดลอกได้'
@@ -1585,11 +2007,8 @@ function formatDate(
     return date.toLocaleString(
         'th-TH',
         {
-            dateStyle:
-                'short',
-
-            timeStyle:
-                'short'
+            dateStyle: 'short',
+            timeStyle: 'short'
         }
     );
 }
@@ -1607,30 +2026,30 @@ function escapeHtml(
         value ?? ''
     )
 
-    .replace(
-        /&/g,
-        '&amp;'
-    )
+        .replace(
+            /&/g,
+            '&amp;'
+        )
 
-    .replace(
-        /</g,
-        '&lt;'
-    )
+        .replace(
+            /</g,
+            '&lt;'
+        )
 
-    .replace(
-        />/g,
-        '&gt;'
-    )
+        .replace(
+            />/g,
+            '&gt;'
+        )
 
-    .replace(
-        /"/g,
-        '&quot;'
-    )
+        .replace(
+            /"/g,
+            '&quot;'
+        )
 
-    .replace(
-        /'/g,
-        '&#039;'
-    );
+        .replace(
+            /'/g,
+            '&#039;'
+        );
 }
 
 
@@ -1646,30 +2065,30 @@ function escapeJs(
         value ?? ''
     )
 
-    .replace(
-        /\\/g,
-        '\\\\'
-    )
+        .replace(
+            /\\/g,
+            '\\\\'
+        )
 
-    .replace(
-        /'/g,
-        "\\'"
-    )
+        .replace(
+            /'/g,
+            "\\'"
+        )
 
-    .replace(
-        /"/g,
-        '\\"'
-    )
+        .replace(
+            /"/g,
+            '\\"'
+        )
 
-    .replace(
-        /\r/g,
-        '\\r'
-    )
+        .replace(
+            /\r/g,
+            '\\r'
+        )
 
-    .replace(
-        /\n/g,
-        '\\n'
-    );
+        .replace(
+            /\n/g,
+            '\\n'
+        );
 }
 
 
@@ -1680,8 +2099,8 @@ function escapeJs(
 if (API_KEY) {
 
     /*
-       ถ้ามีรหัสเก่าค้างในเครื่อง
-       ให้ตรวจใหม่กับ Backend
+       ถ้ามีรหัสที่เคยเก็บไว้
+       ให้ตรวจสอบกับ Backend ใหม่
     */
 
     verifyLogin();
